@@ -256,7 +256,4 @@ def add_friend():
     current_user.add_friend(friend)
     db.session.commit()
     flash(f'{friend.username} has been added to your friends.', 'success')
-    return redirect(url_for('dashboard'))
-
-if __name__ == '__main__':
-    app.run(debug=True) 
+    return redirect(url_for('dashboard')) 
