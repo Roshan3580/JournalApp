@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-5xl font-extrabold text-white mb-4">Welcome to your Personal Journal</h1>
+    <p class="text-xl text-gray-400 mb-8">A simple and secure place to write down your thoughts.</p>
+    <div class="space-x-4">
+        <a class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300" href="{{ url_for('login') }}">Login</a>
+        <a class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300" href="{{ url_for('signup') }}">Sign Up</a>
+    </div>
+</div>
+{% endblock %} 

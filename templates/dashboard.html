@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-4xl font-bold text-white mb-6">Welcome, {{ user.username }}!</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Left Column: Add Friend & Pending Requests -->
+    <div class="md:col-span-1 space-y-8">
+        <div>
+            <h2 class="text-2xl font-semibold text-white mb-4">Add Friend</h2>
+            <form method="POST" action="{{ url_for('send_friend_request') }}" class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+                <div>
+                    <input type="text" name="username" placeholder="Enter username"
+                           class="w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                    Send Request
+                </button>
+            </form>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-semibold text-white mb-4">Pending Requests</h2>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+                {% if pending_requests %}
+                    {% for request in pending_requests %}
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">{{ request.sender.username }}</span>
+                            <div class="flex space-x-2">
+                                <form action="{{ url_for('accept_friend_request', request_id=request.id) }}" method="POST">
+                                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-md text-sm">Accept</button>
+                                </form>
+                                <form action="{{ url_for('reject_friend_request', request_id=request.id) }}" method="POST">
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-md text-sm">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-gray-400">No pending friend requests.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Journals -->
+    <div class="md:col-span-2 space-y-8">
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-white">Your Journals</h2>
+                <a href="{{ url_for('add_journal') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+                    Add New Journal
+                </a>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+                {% for journal in user.journals|sort(attribute='timestamp', reverse=True) %}
+                    <div class="border-b border-gray-700 pb-4">
+                        <h3 class="text-xl font-bold text-white">{{ journal.title }}</h3>
+                        <p class="text-sm text-gray-400 mb-2">{{ journal.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                        <p class="text-gray-300">{{ journal.content }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-gray-400">You haven't written any journals yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div>
+            <h2 class="text-2xl font-semibold text-white mb-4">Friends' Journals</h2>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+                {% for journal in friends_journals %}
+                     <div class="border-b border-gray-700 pb-4">
+                        <h3 class="text-xl font-bold text-white">{{ journal.title }}</h3>
+                        <p class="text-sm text-gray-500 mb-2">by <a href="{{ url_for('profile', username=journal.author.username) }}" class="text-indigo-400 hover:underline">{{ journal.author.username }}</a> on {{ journal.timestamp.strftime('%B %d, %Y') }}</p>
+                        <p class="text-gray-300">{{ journal.content }}</p>
+                    </div>
+                {% else %}
+                    <p class="text-gray-400">No journals from friends to show.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

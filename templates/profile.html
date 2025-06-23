@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold text-white mb-6">{{ user.username }}'s Profile</h2>
+    
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md space-y-6">
+        <h3 class="text-2xl font-semibold text-white border-b border-gray-700 pb-4">Journals</h3>
+        {% for journal in user.journals|sort(attribute='timestamp', reverse=True) %}
+            <div class="border-b border-gray-700 pb-4">
+                <h4 class="text-xl font-bold text-white">{{ journal.title }}</h4>
+                <p class="text-sm text-gray-400 mb-2">{{ journal.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                <p class="text-gray-300">{{ journal.content }}</p>
+            </div>
+        {% else %}
+            <p class="text-gray-400">{{ user.username }} hasn't written any journals yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

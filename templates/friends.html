@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h2 class="text-3xl font-bold text-white mb-6">Your Friends</h2>
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md space-y-4">
+        {% if friends %}
+            {% for friend in friends %}
+                <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+                    <a href="{{ url_for('profile', username=friend.username) }}" class="text-lg text-indigo-400 hover:underline">{{ friend.username }}</a>
+                    <form action="{{ url_for('remove_friend', friend_id=friend.id) }}" method="POST">
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300">
+                            Remove
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-gray-400">You haven't added any friends yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 
